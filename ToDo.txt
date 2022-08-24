@@ -1,0 +1,14 @@
+https://codesandbox.io/s/crazy-borg-5brot?file=/src/App.vue
+scrollRef - food list to scroll up onReset
+orders api reponse not proper
+Orders => Edit/Delete
+Editing an order => reset state-not shown/name-disable/order button - notshown/submit button - notshown/emptycart button - doesnt appear
+/last item in cart cannot be deleted - throws dialog box - cannot have the cart empty
+/cancel button appear - cancels order update - dialog box for confimation/Update button appear => both at order button place
+
+Hover on lists => orange-5
+Hover on food items => shows soom info text about the items
+Order confirmation
+Add/Edit/Delete food => Store Management button to: new page (top-right) => icon = menu/formal_list_bulleted/more_vert
+Loading/Notifications
+whole bg => orange-10/something

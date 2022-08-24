@@ -1,0 +1,122 @@
+[
+    {
+        "foodItemName": "Double Cheese Sandwich",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Cheese Onion Sandwich",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "Grilled Cheese Sandwich",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Spicy Crispy Chicken Sandwich",
+        "price": 2.99
+    },
+    {
+        "foodItemName": "Grilled Chicken Sandwich",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Spicy Delux Chichen Sandwich",
+        "price": 3.49
+    },
+    {
+        "foodItemName": "Filet-o-fish Sandwich",
+        "price": 3.49
+    },
+    {
+        "foodItemName": "Chicken Nuggets",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Grilled Cheese Burger",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "Quarter Pounder Burger",
+        "price": 2.99
+    },
+    {
+        "foodItemName": "Quarter Pounder Cheese Burger",
+        "price": 3.49
+    },
+    {
+        "foodItemName": "Quarter Pounder Burger with Bacon",
+        "price": 3.99
+    },
+    {
+        "foodItemName": "Cheese Burger",
+        "price": 3.19
+    },
+    {
+        "foodItemName": "Double Cheese Burger",
+        "price": 3.49
+    },
+    {
+        "foodItemName": "Ham Burger",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Chocolatey Pretzel",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Oreo Cookies Flurry",
+        "price": 1.49
+    },
+    {
+        "foodItemName": "Chocolate shake",
+        "price": 1.49
+    },
+    {
+        "foodItemName": "Vanilla Shake",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "Strawberry Shake",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "Hot Fudge Sundae",
+        "price": 1.49
+    },
+    {
+        "foodItemName": "Hot Caramel Sundae",
+        "price": 1.49
+    },
+    {
+        "foodItemName": "Baked Apply Pie",
+        "price": 1.19
+    },
+    {
+        "foodItemName": "Caramel Macchiato",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Caramel Cappuccino",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "French Vanilla Cappuccino",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Mocha",
+        "price": 2.49
+    },
+    {
+        "foodItemName": "Mocha Frappe",
+        "price": 1.99
+    },
+    {
+        "foodItemName": "Strawberry Banana Smoothie",
+        "price": 1.49
+    },
+    {
+        "foodItemName": "Mango Pineapple Smoothie",
+        "price": 1.49
+    }
+]
