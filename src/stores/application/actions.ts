@@ -6,9 +6,9 @@ export const actions = {
     async getFoodItems(key) {
         const store = useApplicationStore()
         return await axios
-            .get(`${store.$state.url}/FoodItems?foodCategoryId=${key}`)
+            .get(`${store.$state.url}/foodItems?foodCategoryName=${key}`)
             .then((response) => {
-                return response.data
+                return response.data.foodItems
             })
             .catch(error => console.log(error))
     },
@@ -16,7 +16,7 @@ export const actions = {
     async submitOrder(data) {
         const store = useApplicationStore()
         return await axios
-            .post(`${store.$state.url}/Order`, data)
+            .post(`${store.$state.url}/orders`, data)
             .then((response) => {
                 return response
             })
@@ -26,9 +26,10 @@ export const actions = {
     async getFoodCategory() {
         const store = useApplicationStore()
         return await axios
-            .get(`${store.$state.url}/Category`)
+            .get(`${store.$state.url}/foodCategories`)
             .then((response) => {
-                return response.data
+              console.log(response)
+                return response.data.foodCategories
             })
             .catch(error => console.log(error))
     },
@@ -36,9 +37,9 @@ export const actions = {
     async getAllOrders() {
         const store = useApplicationStore()
         return await axios
-            .get(`${store.$state.url}/Order`)
+            .get(`${store.$state.url}/orders`)
             .then((response) => {
-                return response.data
+                return response.data.orders
             })
             .catch(error => console.log(error))
     }
