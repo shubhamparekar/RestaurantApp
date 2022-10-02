@@ -121,15 +121,18 @@
           </div>
         </div>
         <q-list style="width: 250px">
-          <div v-for="category in foodCategory" :key="category.foodCategoryId">
+          <div
+            v-for="category in foodCategory"
+            :key="category.foodCategoryName"
+          >
             <q-item
               clickable
               active-class="active-category-menu"
-              :active="selected === category.foodCategoryId"
-              @click="selectFoodCategory(category.foodCategoryId)"
+              :active="selected === category.foodCategoryName"
+              @click="selectFoodCategory(category.foodCategoryName)"
             >
               <q-item-section avatar>
-                <q-icon :name="icon(category.foodCategoryId)" />
+                <q-icon :name="icon(category.foodCategoryName)" />
               </q-item-section>
               <q-item-section>{{ category.foodCategoryName }}</q-item-section>
               <q-item-section avatar>
@@ -143,7 +146,7 @@
         <q-list style="width: 350px; height: 360px; overflow-y: auto">
           <div
             v-for="food in filteredFoodItems"
-            :key="food.foodItemId"
+            :key="food._id"
             ref="scrollRef"
           >
             <q-item clickable>
@@ -166,15 +169,14 @@
             >Food Cart</q-item-label
           >
           <div style="width: 360px; height: 265px; overflow-y: auto">
-            <div v-for="food in selectedFoodItems" :key="food.foodItemId">
+            <div v-for="food in selectedFoodItems" :key="food.foodItemID">
               <q-item clickable>
                 <q-item-section top>
                   <q-item-label
                     >{{ food.foodItemName }} -
                     <span style="opacity: 0.7"
                       >${{
-                        Math.floor(food.foodItemPrice * food.quantity * 100) /
-                        100
+                        Math.floor(food.price * food.quantity * 100) / 100
                       }}</span
                     ></q-item-label
                   >
@@ -183,18 +185,18 @@
                       icon="exposure_plus_1"
                       color="orange-5"
                       size="sm"
-                      @click="updateQuantity(food.foodItemId, 1)"
+                      @click="updateQuantity(food.foodItemID, 1)"
                     />
                     <q-btn disable size="sm">{{ food.quantity }}</q-btn>
                     <q-btn
                       icon="exposure_neg_1"
                       color="orange-5"
                       size="sm"
-                      @click="updateQuantity(food.foodItemId, -1)"
+                      @click="updateQuantity(food.foodItemID, -1)"
                     />
                   </div>
                 </q-item-section>
-                <q-item-section side @click="deleteFoodItem(food.foodItemId)">
+                <q-item-section side @click="deleteFoodItem(food._id)">
                   <q-icon name="delete" size="1.5em" color="red" />
                 </q-item-section>
               </q-item>
@@ -337,12 +339,25 @@ export default {
     const useStore = useApplicationStore();
     const payment = ref(["Cash", "Card", "UPI"]);
     const orderNumber = ref(generateOrderNumber());
+    const paymentMethod = ref("");
+    const customerName = ref("");
+    const paymentRef = ref("");
+    const nameRef = ref("");
+    const toggleEmptyCart = ref(false);
+    const toggleClearCart = ref(false);
+    const toggleOrder = ref(false);
+    const searchElement = ref("");
+    const selectedFoodItems = ref([]);
+    const scrollRef = ref(null);
+    const vegFilter = ref("");
+    const nonVegFilter = ref("");
+    const selected = ref(null);
+    const foodItems = ref([]);
+    const orders = ref([]);
 
     function generateOrderNumber() {
       return Math.floor(Math.random() * 9000000000).toString();
     }
-
-    const searchElement = ref("");
 
     const filteredFoodItems = computed(() => {
       return foodItems.value.filter((food) => {
@@ -355,7 +370,7 @@ export default {
               .toLowerCase()
               .match(searchElement.value.toLowerCase()) &&
             selectedFoodItems.value.every(
-              (item) => item.foodItemId !== food.foodItemId
+              (item) => item.foodItemID !== food._id
             )
           );
         } else {
@@ -364,7 +379,7 @@ export default {
               .toLowerCase()
               .match(searchElement.value.toLowerCase()) &&
             selectedFoodItems.value.every(
-              (item) => item.foodItemId !== food.foodItemId
+              (item) => item.foodItemID !== food._id
             ) &&
             food.foodCategory !== vegFilter.value &&
             food.foodCategory !== nonVegFilter.value
@@ -377,28 +392,22 @@ export default {
       var total = 0;
       for (let i in selectedFoodItems.value) {
         var object = selectedFoodItems.value[i];
-        total += object.quantity * object.foodItemPrice;
+        total += object.quantity * object.price;
       }
       return Math.floor(total * 100) / 100;
     });
 
-    const selectedFoodItems = ref([]);
-
     function addFoodItem(data) {
       selectedFoodItems.value.push({
-        foodItemId: data.foodItemId,
+        foodItemID: data._id,
+        orderNumber: orderNumber,
         foodItemName: data.foodItemName,
-        foodItemPrice: data.price,
+        price: data.price,
         quantity: 1,
+        paymentMethod: paymentMethod,
+        totalPrice: 0,
       });
     }
-    const paymentMethod = ref("");
-    const customerName = ref("");
-    const paymentRef = ref("");
-    const nameRef = ref("");
-    const toggleEmptyCart = ref(false);
-    const toggleClearCart = ref(false);
-    const toggleOrder = ref(false);
 
     function onSubmit() {
       const name = nameRef.value.validate();
@@ -406,23 +415,23 @@ export default {
       const total = _.isEmpty(selectedFoodItems.value);
       if (!total) {
         if (name && payment) {
-          const object = {
+          const foodOrder = {
             orderNumber: orderNumber.value,
             customerName: customerName.value,
             paymentMethod: paymentMethod.value,
             grandTotal: grandTotal.value,
             orderedFoodItems: selectedFoodItems.value,
           };
-          useStore.submitOrder(object);
+          const foodItems = selectedFoodItems.value;
+          useStore.submitOrder({ foodOrder, foodItems });
           onResetForm();
           resetCart();
+          generateOrderNumber();
         }
       } else {
         toggleEmptyCart.value = true;
       }
     }
-
-    const scrollRef = ref(null);
 
     function onResetForm() {
       paymentMethod.value = "";
@@ -430,7 +439,7 @@ export default {
       searchElement.value = "";
       vegFilter.value = "";
       nonVegFilter.value = "";
-      selected.value = foodCategory.value[0].foodCategoryId;
+      selected.value = foodCategory.value[0].foodCategoryName;
       nameRef.value.resetValidation();
       paymentRef.value.resetValidation();
       console.log(scrollRef.value);
@@ -442,7 +451,7 @@ export default {
 
     function updateQuantity(key, value) {
       var object = selectedFoodItems.value.find(
-        (item) => item.foodItemId === key
+        (item) => item.foodItemID === key
       );
       if (value === 1) {
         object.quantity += value;
@@ -452,36 +461,32 @@ export default {
         } else {
         }
       }
+      object.totalPrice = object.price * object.quantity;
+      Math.floor(object.totalPrice * 100) / 100;
     }
 
     const foodCategory = ref([]);
     useStore.getFoodCategory().then((response) => {
       foodCategory.value = response;
-      selected.value = foodCategory.value[0].foodCategoryId;
+      selected.value = foodCategory.value[0].foodCategoryName;
       getFoodItems(selected.value);
     });
 
-    function icon(id) {
-      return foodCategory.value.find((item) => item.foodCategoryId === id).icon;
+    function icon(name) {
+      return foodCategory.value.find((item) => item.foodCategoryName === name)
+        .icon;
     }
-
-    const vegFilter = ref("");
-    const nonVegFilter = ref("");
-
-    const selected = ref(null);
 
     function deleteFoodItem(key) {
       if (selectedFoodItems.value.length !== 1) {
         const index = selectedFoodItems.value.findIndex(
-          (ele) => ele.foodItemId === key
+          (ele) => ele.foodItemID === key
         );
         selectedFoodItems.value.splice(index, 1);
       } else {
         toggleClearCart.value = true;
       }
     }
-
-    const foodItems = ref([]);
 
     function getFoodItems(key) {
       useStore.getFoodItems(key).then((response) => {
@@ -493,8 +498,6 @@ export default {
       selected.value = key;
       getFoodItems(key);
     }
-
-    const orders = ref([]);
 
     function getAllOrders() {
       useStore.getAllOrders().then((response) => {
